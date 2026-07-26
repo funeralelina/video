@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>In Ricordo</title>
+<style>
+  :root {
+    --ink: #3a3f45;
+    --paper: #f6f3ee;
+    --line: #d8d2c6;
+    --gold: #a9835a;
+    --gold-dim: #c9b199;
+    --soft: #7c828a;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Georgia', 'Iowan Old Style', 'Palatino Linotype', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .wrap {
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .glow {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--gold);
+    margin: 0 auto 28px;
+    box-shadow: 0 0 18px 6px rgba(169, 131, 90, 0.45);
+  }
+
+  h1 {
+    font-weight: 400;
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    letter-spacing: 0.02em;
+    margin: 0 0 8px;
+    color: var(--ink);
+  }
+
+  .subtitle {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin: 0 0 40px;
+  }
+
+  /* Watch button */
+  .watch-btn {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    display: inline-block;
+    padding: 18px 40px;
+    border: 1px solid var(--gold);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--gold);
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background 0.25s ease, color 0.25s ease;
+  }
+
+  .watch-btn:not(:disabled):hover {
+    background: var(--gold);
+    color: var(--paper);
+  }
+
+  .watch-btn:disabled {
+    border-color: var(--line);
+    color: var(--gold-dim);
+    cursor: not-allowed;
+  }
+
+  .btn-note {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.82rem;
+    color: var(--soft);
+    margin: 14px 0 44px;
+    line-height: 1.6;
+  }
+
+  .rule {
+    width: 64px;
+    height: 1px;
+    background: var(--line);
+    margin: 0 auto 44px;
+  }
+
+  .countdown {
+    display: flex;
+    justify-content: center;
+    gap: clamp(16px, 5vw, 36px);
+    margin-bottom: 40px;
+  }
+
+  .unit {
+    min-width: 64px;
+  }
+
+  .unit .num {
+    font-size: clamp(2rem, 7vw, 3.2rem);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+    color: var(--ink);
+  }
+
+  .unit .label {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--soft);
+    margin-top: 10px;
+  }
+
+  .when {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.9rem;
+    color: var(--soft);
+    line-height: 1.8;
+  }
+
+  .status {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 0.95rem;
+    color: var(--gold);
+    margin-top: 26px;
+    line-height: 1.7;
+    display: none;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .glow {
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.25); }
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="glow"></div>
+
+    <h1>Diretta della Cerimonia</h1>
+    <p class="subtitle">In Collegamento da Remoto</p>
+
+    <button class="watch-btn" id="watchBtn" disabled>Guarda la Diretta</button>
+    <p class="btn-note">
+      Il link della diretta sarà disponibile sabato 1 agosto alle ore 12:30 (Ora Orientale), prima dell'inizio della cerimonia.
+    </p>
+
+    <div class="rule"></div>
+
+    <div class="countdown" id="countdown">
+      <div class="unit"><div class="num" id="days">00</div><div class="label">Giorni</div></div>
+      <div class="unit"><div class="num" id="hours">00</div><div class="label">Ore</div></div>
+      <div class="unit"><div class="num" id="minutes">00</div><div class="label">Minuti</div></div>
+      <div class="unit"><div class="num" id="seconds">00</div><div class="label">Secondi</div></div>
+    </div>
+
+    <p class="when">
+      La cerimonia funebre avrà inizio al termine del conto alla rovescia qui sopra.<br><br>
+      Sabato 1 agosto 2026 &middot; ore 13:00 (Ora Orientale)
+    </p>
+
+    <p class="status" id="status">
+      Il link della diretta sarà disponibile a breve. Si prega di ricontrollare.
+    </p>
+  </div>
+
+<script>
+  // ---- MODIFICARE QUESTO QUANDO IL LINK DELLA DIRETTA È PRONTO ----
+  // Incollare l'URL della diretta tra le virgolette qui sotto, poi salvare
+  // e caricare la modifica. Il pulsante "Guarda la Diretta" userà questo
+  // link una volta attivo (1 agosto, ore 12:30, Ora Orientale).
+  const REDIRECT_URL = "";
+  // ------------------------------------------------------------------
+
+  // Il conto alla rovescia termina all'inizio della cerimonia.
+  // Inizio cerimonia: 1 agosto 2026, ore 13:00 Ora Orientale (EDT) = 17:00 UTC
+  const serviceStartDate = new Date("2026-08-01T17:00:00Z");
+
+  // Il pulsante "Guarda la Diretta" si attiva prima della fine del conto
+  // alla rovescia, così le persone possono collegarsi prima dell'inizio.
+  // Predefinito: 30 minuti prima -> ore 12:30 EDT = 16:30 UTC
+  const buttonUnlockDate = new Date("2026-08-01T16:30:00Z");
+
+  const daysEl = document.getElementById("days");
+  const hoursEl = document.getElementById("hours");
+  const minutesEl = document.getElementById("minutes");
+  const secondsEl = document.getElementById("seconds");
+  const statusEl = document.getElementById("status");
+  const countdownEl = document.getElementById("countdown");
+  const watchBtn = document.getElementById("watchBtn");
+
+  function pad(n) {
+    return String(n).padStart(2, "0");
+  }
+
+  function tick() {
+    const now = new Date();
+
+    // Attiva il pulsante non appena si raggiunge il proprio orario di
+    // sblocco, indipendentemente dal conto alla rovescia.
+    if (now >= buttonUnlockDate && watchBtn.disabled) {
+      watchBtn.disabled = false;
+    }
+
+    const diff = serviceStartDate - now;
+
+    if (diff <= 0) {
+      countdownEl.style.display = "none";
+      clearInterval(timer);
+      return;
+    }
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    daysEl.textContent = pad(days);
+    hoursEl.textContent = pad(hours);
+    minutesEl.textContent = pad(minutes);
+    secondsEl.textContent = pad(seconds);
+  }
+
+  tick();
+  const timer = setInterval(tick, 1000);
+
+  watchBtn.addEventListener("click", () => {
+    if (new Date() < buttonUnlockDate) return; // sicurezza extra, il pulsante è comunque disabilitato
+    const url = REDIRECT_URL.trim();
+    if (url !== "") {
+      window.location.href = url;
+    } else {
+      statusEl.style.display = "block";
+    }
+  });
+
+  // ---- Controllo automatico ogni ora, a partire dal 30 luglio 2026 ----
+  // REDIRECT_URL si aggiorna solo quando il codice della pagina viene
+  // ripubblicato, quindi chi ha lasciato la pagina aperta in precedenza
+  // non vedrà il nuovo link finché la pagina non si ricarica. A partire
+  // dal 30 luglio 2026 (EDT), la pagina si ricarica automaticamente ogni
+  // ora per recuperare l'ultima versione. Prima del 30 luglio non succede nulla.
+  const hourlyCheckStart = new Date("2026-07-30T04:00:00Z"); // 30 luglio 2026, mezzanotte EDT
+  const HOUR_MS = 60 * 60 * 1000;
+
+  function beginHourlyChecks() {
+    setInterval(() => {
+      window.location.reload();
+    }, HOUR_MS);
+  }
+
+  const msUntilHourlyStart = hourlyCheckStart - new Date();
+  if (msUntilHourlyStart <= 0) {
+    beginHourlyChecks();
+  } else {
+    setTimeout(beginHourlyChecks, msUntilHourlyStart);
+  }
+</script>
+
+</body>
+</html>
