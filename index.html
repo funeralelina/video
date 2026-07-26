@@ -189,20 +189,10 @@
   </div>
 
 <script>
-  // ---- MODIFICARE QUESTO QUANDO IL LINK DELLA DIRETTA È PRONTO ----
-  // Incollare l'URL della diretta tra le virgolette qui sotto, poi salvare
-  // e caricare la modifica. Il pulsante "Guarda la Diretta" userà questo
-  // link una volta attivo (1 agosto, ore 12:30, Ora Orientale).
   const REDIRECT_URL = "";
-  // ------------------------------------------------------------------
 
-  // Il conto alla rovescia termina all'inizio della cerimonia.
-  // Inizio cerimonia: 1 agosto 2026, ore 13:00 Ora Orientale (EDT) = 17:00 UTC
   const serviceStartDate = new Date("2026-08-01T17:00:00Z");
 
-  // Il pulsante "Guarda la Diretta" si attiva prima della fine del conto
-  // alla rovescia, così le persone possono collegarsi prima dell'inizio.
-  // Predefinito: 30 minuti prima -> ore 12:30 EDT = 16:30 UTC
   const buttonUnlockDate = new Date("2026-08-01T16:30:00Z");
 
   const daysEl = document.getElementById("days");
@@ -218,53 +208,50 @@
   }
 
   function tick() {
-    const now = new Date();
+    try {
+      const now = new Date();
 
-    // Attiva il pulsante non appena si raggiunge il proprio orario di
-    // sblocco, indipendentemente dal conto alla rovescia.
-    if (now >= buttonUnlockDate && watchBtn.disabled) {
-      watchBtn.disabled = false;
+      if (watchBtn && now >= buttonUnlockDate && watchBtn.disabled) {
+        watchBtn.disabled = false;
+      }
+
+      const diff = serviceStartDate - now;
+
+      if (diff <= 0) {
+        if (countdownEl) countdownEl.style.display = "none";
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      if (daysEl) daysEl.textContent = pad(days);
+      if (hoursEl) hoursEl.textContent = pad(hours);
+      if (minutesEl) minutesEl.textContent = pad(minutes);
+      if (secondsEl) secondsEl.textContent = pad(seconds);
+    } catch (err) {
+      console.error("Countdown tick error:", err);
     }
-
-    const diff = serviceStartDate - now;
-
-    if (diff <= 0) {
-      countdownEl.style.display = "none";
-      clearInterval(timer);
-      return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const minutes = Math.floor((diff / (1000 * 60)) % 60);
-    const seconds = Math.floor((diff / 1000) % 60);
-
-    daysEl.textContent = pad(days);
-    hoursEl.textContent = pad(hours);
-    minutesEl.textContent = pad(minutes);
-    secondsEl.textContent = pad(seconds);
   }
 
   tick();
   const timer = setInterval(tick, 1000);
 
-  watchBtn.addEventListener("click", () => {
-    if (new Date() < buttonUnlockDate) return; // sicurezza extra, il pulsante è comunque disabilitato
-    const url = REDIRECT_URL.trim();
-    if (url !== "") {
-      window.location.href = url;
-    } else {
-      statusEl.style.display = "block";
-    }
-  });
+  if (watchBtn) {
+    watchBtn.addEventListener("click", () => {
+      if (new Date() < buttonUnlockDate) return;
+      const url = REDIRECT_URL.trim();
+      if (url !== "") {
+        window.location.href = url;
+      } else if (statusEl) {
+        statusEl.style.display = "block";
+      }
+    });
+  }
 
-  // ---- Controllo automatico ogni ora, a partire dal 30 luglio 2026 ----
-  // REDIRECT_URL si aggiorna solo quando il codice della pagina viene
-  // ripubblicato, quindi chi ha lasciato la pagina aperta in precedenza
-  // non vedrà il nuovo link finché la pagina non si ricarica. A partire
-  // dal 30 luglio 2026 (EDT), la pagina si ricarica automaticamente ogni
-  // ora per recuperare l'ultima versione. Prima del 30 luglio non succede nulla.
-  const hourlyCheckStart = new Date("2026-07-30T04:00:00Z"); // 30 luglio 2026, mezzanotte EDT
+  const hourlyCheckStart = new Date("2026-07-30T04:00:00Z");
   const HOUR_MS = 60 * 60 * 1000;
 
   function beginHourlyChecks() {
